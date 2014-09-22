@@ -8,6 +8,8 @@
 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
 	 <!--[if lte IE 8]>
     	 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
@@ -24,13 +26,20 @@
 		html, body, #map {
 		    height: 100%;
 		}
+
+		table, td, tr {
+			border: 1px solid #eee;
+			border-collapse: collapse;
+			text-align: right;
+		}
+
 	</style>
 
 </head>
 <body>
 	<div id="map"></div>
 
-	<script src="data/data.geojson"></script>
+	<!-- <script src="data/data.geojson"></script> -->
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
 
 	<script type="text/javascript">
@@ -38,17 +47,14 @@
 		String.prototype.trim = String.prototype.trim || function trim() { return this.replace(/^\s\s*/, '').replace(/\s\s*$/, ''); };
 
 		function onEachFeature(feature, layer) {
-			// console.log(layer);
 
-			p = feature.properties
+			var marker_html='<table>';
 
-			marker_html='<div style="text-align: right">'
-			// 				+ '<b>' + p.city + '</b><br />'
-			// 				+ p.address + '<br />'
-			// 				+ '<a href="tel:' + phone + '">' + phone + '</a><br />';							
-			
+			$.each(feature.properties, function(k, v) {
+				marker_html+= '<tr><td>'+ v +'</td><td>'+ k +'</td></tr>';
+			});
 
-			marker_html +='</div>';
+			marker_html +='</table>';
 
 			layer.bindPopup(marker_html);
 		}
@@ -56,6 +62,8 @@
 		
 		var MAP_CENTER = [32.79,34.98];
 		var DEFAULT_ZOOM = 12;
+
+		var RES = "A";
 
 		var map = L.map('map', 
 							{ 
@@ -76,18 +84,31 @@
 			minZoom: 9
 		}).addTo(map);
 
-		L.geoJson(DATA,
-			{
-				pointToLayer: function (feature, latlng) {
-		        	return L.marker(latlng);
-		    	},
+		
 
-				filter: function(feature, layer) {
-			        return !feature.properties.error;
-			    },
-				onEachFeature: onEachFeature,
-			}
-		).addTo(map);
+		$.ajax({
+			url: 'https://api.github.com/gists/8d289666ba21272883ed'
+		 //    headers: { Accept: 'application/vnd.github.raw' },
+			// dataType: 'json'
+		}).done(function(r) {
+			console.log(r);
+			res = $.parseJSON(r.files.abandoned_bldgs.content);
+			console.log(res);
+
+			L.geoJson(res,
+				{
+					pointToLayer: function (feature, latlng) {
+			        	return L.marker(latlng);
+			    	},
+
+					filter: function(feature, layer) {
+				        return !feature.properties.error;
+				    },
+					onEachFeature: onEachFeature,
+				}
+			).addTo(map);
+		});
+
 	</script>
 
 	<!-- script>
