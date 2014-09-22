@@ -81,7 +81,7 @@
 		}).addTo(map);
 
 		$.ajax({
-			url: 'https://gist.githubusercontent.com/niryariv/8d289666ba21272883ed/raw/38fadbe28c8baa06c6362fe7a406b3d43089ec6e/abandoned_bldgs.geojson'
+			url: 'http://api.github.com/gists/8d289666ba21272883ed'
 		}).done(function(r) {
 
 			var data = $.parseJSON(r.files.abandoned_bldgs.content);
