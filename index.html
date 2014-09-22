@@ -81,7 +81,7 @@
 		}).addTo(map);
 
 		$.ajax({
-			url: 'http://api.github.com/gists/8d289666ba21272883ed'
+			url: 'https://api.github.com/gists/8d289666ba21272883ed'
 		}).done(function(r) {
 
 			var data = $.parseJSON(r.files.abandoned_bldgs.content);
