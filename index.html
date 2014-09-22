@@ -84,7 +84,7 @@
 			url: 'https://api.github.com/gists/8d289666ba21272883ed'
 		}).done(function(r) {
 
-			var data = $.parseJSON(r.files.abandoned_bldgs.content);
+			var data = $.parseJSON(r.files["abandoned_bldgs.geojson"].content);
 			// var data = r;
 			console.log(data);
 
@@ -93,7 +93,7 @@
 					pointToLayer: function (feature, latlng) {
 			        	return L.marker(latlng);
 			    	}
-			    	,onEachFeature: onEachFeature,
+			    	,onEachFeature: onEachFeature
 				}
 			).addTo(map);
 		});
